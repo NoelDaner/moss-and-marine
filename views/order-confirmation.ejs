@@ -1,0 +1,53 @@
+<div class="container order-confirmation-page py-5">
+    <div class="order-confirmation-card card border-0 shadow-sm mx-auto">
+        <div class="card-body p-4 p-md-5">
+            <div class="order-confirmation-check mb-3" aria-hidden="true">✓</div>
+            <p class="inventory-eyebrow mb-2">Order placed</p>
+            <h1 class="mb-2">Thanks, <%= order.customer.firstName %>!</h1>
+            <p class="text-muted mb-4">Your order has been saved and inventory has been updated. We also attempted to send a confirmation to <strong><%= order.customer.email %></strong>.</p>
+
+            <div class="order-confirmation-meta mb-4">
+                <div>
+                    <span>Order number</span>
+                    <strong><%= order.orderNumber %></strong>
+                </div>
+                <div>
+                    <span>Status</span>
+                    <strong><%= order.status %></strong>
+                </div>
+                <div>
+                    <span>Date</span>
+                    <strong><%= new Date(order.createdAt).toLocaleString('en-CA', { dateStyle: 'medium', timeStyle: 'short' }) %></strong>
+                </div>
+            </div>
+
+            <div class="order-confirmation-items mb-4">
+                <% order.items.forEach(item => { %>
+                    <div class="order-history-item">
+                        <img src="<%= item.imageUrl %>" alt="<%= item.title %>" class="order-history-image">
+                        <div class="flex-grow-1">
+                            <div class="fw-semibold"><%= item.title %></div>
+                            <div class="small text-muted">$<%= item.unitPrice.toFixed(2) %> × <%= item.quantity %></div>
+                        </div>
+                        <div class="fw-semibold">$<%= item.lineTotal.toFixed(2) %></div>
+                    </div>
+                <% }); %>
+            </div>
+
+            <div class="order-confirmation-total">
+                <span>Total</span>
+                <strong>$<%= order.total.toFixed(2) %></strong>
+            </div>
+
+            <div class="site-alert site-alert-info mt-4 mb-0" role="note">
+                <div class="site-alert-icon">i</div>
+                <div>This is a portfolio checkout: no real payment was processed and no physical shipment was created.</div>
+            </div>
+
+            <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+                <a href="/orders" class="btn btn-primary flex-sm-grow-1">View Order History</a>
+                <a href="/inventory" class="btn btn-outline-primary flex-sm-grow-1">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+</div>

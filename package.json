@@ -1,0 +1,36 @@
+{
+  "name": "moss-and-marine",
+  "version": "1.0.0",
+  "description": "Full-stack aquarium e-commerce portfolio project built with Node.js, Express, EJS, MongoDB, sessions, role-based authorization, and product management.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node scripts/check.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "mongodb",
+    "ecommerce",
+    "ejs",
+    "portfolio",
+    "inventory",
+    "mailgun"
+  ],
+  "author": "Noel Southe",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-fileupload": "^1.5.1",
+    "express-session": "^1.18.1",
+    "form-data": "^4.0.2",
+    "mailgun.js": "^12.0.1",
+    "mongoose": "^8.12.1",
+    "connect-mongo": "^5.1.0"
+  }
+}

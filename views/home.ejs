@@ -1,0 +1,124 @@
+<div class="hero-shell"><div class="hero position-relative">
+    <div class="container text-center py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">Discover Your Underwater Paradise</h1>
+                <p class="lead mb-4">Premium aquatic life, expertly curated supplies, and home-grown aquatic plants</p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="/inventory" class="btn btn-primary btn-lg px-4">Shop Now</a>
+                    <a href="/inventory?type=live" class="btn btn-outline-light btn-lg px-4">Browse Live Inventory</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div></div>
+
+<section class="category-showcase py-5">
+    <div class="container">
+        <div class="category-showcase-heading text-center mb-4">
+            <p class="category-showcase-eyebrow mb-2">Find your setup</p>
+            <h2 class="mb-2">Shop by Category</h2>
+            <p class="text-muted mb-0">Everything you need to build, stock, and care for your aquarium.</p>
+        </div>
+
+        <div class="category-showcase-grid">
+            <a href="/inventory?category=Aquatic Life" class="category-tile">
+                <img src="/images/liveFish.png" alt="Aquatic Life" class="category-tile-image">
+                <span class="category-tile-shade"></span>
+                <div class="category-tile-content">
+                    <span class="category-tile-number">01</span>
+                    <div>
+                        <h3>Aquatic Life</h3>
+                        <p>Freshwater & marine species</p>
+                    </div>
+                    <span class="category-tile-action">Explore <span aria-hidden="true">→</span></span>
+                </div>
+            </a>
+
+            <a href="/inventory?category=Plants" class="category-tile">
+                <img src="/images/plants.png" alt="Aquatic Plants" class="category-tile-image">
+                <span class="category-tile-shade"></span>
+                <div class="category-tile-content">
+                    <span class="category-tile-number">02</span>
+                    <div>
+                        <h3>Aquatic Plants</h3>
+                        <p>Home grown & imported</p>
+                    </div>
+                    <span class="category-tile-action">Explore <span aria-hidden="true">→</span></span>
+                </div>
+            </a>
+
+            <a href="/inventory?category=Equipment" class="category-tile">
+                <img src="/images/cleartank.png" alt="Aquariums and Equipment" class="category-tile-image">
+                <span class="category-tile-shade"></span>
+                <div class="category-tile-content">
+                    <span class="category-tile-number">03</span>
+                    <div>
+                        <h3>Equipment</h3>
+                        <p>Tanks, lighting & supplies</p>
+                    </div>
+                    <span class="category-tile-action">Explore <span aria-hidden="true">→</span></span>
+                </div>
+            </a>
+
+            <a href="/inventory?category=Maintenance" class="category-tile">
+                <img src="/images/maintane.png" alt="Aquarium Maintenance" class="category-tile-image">
+                <span class="category-tile-shade"></span>
+                <div class="category-tile-content">
+                    <span class="category-tile-number">04</span>
+                    <div>
+                        <h3>Maintenance</h3>
+                        <p>Water care, testing & upkeep</p>
+                    </div>
+                    <span class="category-tile-action">Explore <span aria-hidden="true">→</span></span>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Featured Products</h2>
+        <div class="product-grid product-grid-featured">
+            <% products.forEach(function(product) { %>
+                <%- include('./partials/product', { product: product }) %>
+            <% }); %>
+        </div>
+    </div>
+</section>
+
+<div class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">Why Choose Moss Marine</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-heart text-primary mb-3" style="font-size: 2rem;"></i>
+                        <h3 class="h5">Expert Care</h3>
+                        <p class="card-text">All our aquatic life is housed in carefully maintained systems with daily health monitoring</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-leaf text-primary mb-3" style="font-size: 2rem;"></i>
+                        <h3 class="h5">Home Grown</h3>
+                        <p class="card-text">We cultivate many of our aquatic plants and breed select species in-house</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-check-circle text-primary mb-3" style="font-size: 2rem;"></i>
+                        <h3 class="h5">Quality Guaranteed</h3>
+                        <p class="card-text">14-day guarantee on all live stock with proper water parameters</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

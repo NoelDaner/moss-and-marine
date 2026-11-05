@@ -1,0 +1,54 @@
+<footer>
+    <div class="container">
+        <div class="footer-container">
+            <div class="footer-column footer-brand-column">
+                <div class="footer-brand-lockup">
+                    <img src="/images/logo.png" alt="Moss and Marine" class="footer-logo">
+                </div>
+                <p>Premium aquatic life, carefully selected supplies, and aquatic plants for your underwater paradise.</p>
+            </div>
+
+            <div class="footer-column">
+                <h5>Shop</h5>
+                <ul class="footer-links">
+                    <li><a href="/inventory">All Products</a></li>
+                    <li><a href="/inventory?category=Aquatic%20Life">Aquatic Life</a></li>
+                    <li><a href="/inventory?category=Plants">Plants</a></li>
+                    <li><a href="/inventory?category=Equipment">Equipment</a></li>
+                    <li><a href="/inventory?category=Maintenance">Maintenance</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h5>Account</h5>
+                <ul class="footer-links">
+                    <% if (locals.user) { %>
+                        <li><a href="/cart">My Cart</a></li>
+                        <% if (user.role === 'data-entry-clerk') { %>
+                            <li><a href="/inventory/list">Manage Products</a></li>
+                        <% } %>
+                        <li><a href="/logout">Log Out</a></li>
+                    <% } else { %>
+                        <li><a href="/log-in">Log In</a></li>
+                        <li><a href="/sign-up">Create Account</a></li>
+                    <% } %>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h5>Developer</h5>
+                <ul class="footer-links">
+                    <li>
+                        <a href="https://www.linkedin.com/in/noel-southe-a58b942ba/" target="_blank" rel="noopener noreferrer">
+                            LinkedIn
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; <%= new Date().getFullYear() %> Moss and Marine. All rights reserved.</p>
+        </div>
+    </div>
+</footer>

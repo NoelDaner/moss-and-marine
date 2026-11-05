@@ -1,0 +1,39 @@
+<div class="mb-3">
+    <label class="form-label d-block">Category</label>
+    <div class="category-picker" role="group" aria-label="Product category">
+        <% const selectedCategory = product && product.category ? product.category : ''; %>
+        <% ['Aquatic Life', 'Plants', 'Equipment', 'Maintenance'].forEach(categoryOption => { %>
+            <input class="btn-check" type="radio" name="category" id="category-<%= categoryOption.replace(/\s+/g, '-').toLowerCase() %>" value="<%= categoryOption %>" <%= selectedCategory === categoryOption ? 'checked' : '' %> required>
+            <label class="btn category-option" for="category-<%= categoryOption.replace(/\s+/g, '-').toLowerCase() %>"><%= categoryOption %></label>
+        <% }); %>
+    </div>
+    <small class="text-muted d-block mt-2">Choose a category so inventory names stay consistent.</small>
+</div>
+
+<div class="mb-3" id="animal-classification" hidden>
+  <label for="animalType" class="form-label">Animal type</label>
+  <select class="form-select" id="animalType" name="animalType" disabled>
+    <option value="">Choose animal type</option>
+    <% ['Fish','Shrimp','Snail','Other'].forEach(type => { %>
+      <option value="<%= type %>" <%= product && product.animalType === type ? 'selected' : '' %>><%= type %></option>
+    <% }); %>
+  </select>
+  <label for="animalFamily" class="form-label mt-3">Product family <span class="text-muted fw-normal">(optional)</span></label>
+  <input class="form-control" id="animalFamily" name="animalFamily" maxlength="80" value="<%= product && product.animalFamily ? product.animalFamily : '' %>" placeholder="e.g. Bettas, Gouramis, Cherry Shrimp" disabled>
+  <datalist id="animal-family-suggestions"></datalist>
+  <small class="text-muted d-block mt-2">Optional subgroup for filtering; the animal type always remains the main category.</small>
+</div>
+<script>
+(() => {
+  const categories = document.querySelectorAll('input[name="category"]');
+  const section = document.querySelector('#animal-classification');
+  if (!section) return;
+  const refresh = () => {
+    const active = Array.from(categories).some(el => el.checked && el.value === 'Aquatic Life');
+    section.hidden = !active;
+    section.querySelectorAll('input, select').forEach(el => { el.disabled = !active; el.required = active && el.id === 'animalType'; });
+  };
+  categories.forEach(el => el.addEventListener('change', refresh));
+  refresh();
+})();
+</script>

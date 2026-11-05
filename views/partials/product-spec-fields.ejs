@@ -1,0 +1,87 @@
+<%
+  const specs = (product && product.specifications) || {};
+  const field = (name) => {
+    if (product && product[name] !== undefined) return product[name];
+    if (specs && specs[name] !== undefined) return specs[name];
+    return '';
+  };
+%>
+<div class="mb-4 product-spec-editor" data-product-spec-editor>
+  <h4>Product Details</h4>
+  <p class="text-muted small mb-3">These details change with the selected category, so customers see useful aquarium information instead of generic shipping measurements.</p>
+
+  <div data-spec-group="Aquatic Life" class="product-spec-group d-none">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="lifespan" class="form-label">Typical Lifespan</label>
+        <input type="text" class="form-control" id="lifespan" name="lifespan" value="<%= field('lifespan') %>" placeholder="e.g. 3–5 years">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="minimumTankSizeGallons" class="form-label">Minimum Tank Size (gal)</label>
+        <input type="number" class="form-control" id="minimumTankSizeGallons" name="minimumTankSizeGallons" min="1" step="0.5" value="<%= field('minimumTankSizeGallons') %>" placeholder="e.g. 10">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="adultSize" class="form-label">Adult Size</label>
+        <input type="text" class="form-control" id="adultSize" name="adultSize" value="<%= field('adultSize') %>" placeholder="e.g. 6 cm">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="careLevelFish" class="form-label">Care Level</label>
+        <select class="form-select" id="careLevelFish" name="careLevel">
+          <option value="">Not specified</option>
+          <% ['Beginner', 'Intermediate', 'Advanced'].forEach(level => { %>
+            <option value="<%= level %>" <%= field('careLevel') === level ? 'selected' : '' %>><%= level %></option>
+          <% }); %>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div data-spec-group="Plants" class="product-spec-group d-none">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="lightRequirement" class="form-label">Light Requirement</label>
+        <select class="form-select" id="lightRequirement" name="lightRequirement">
+          <option value="">Not specified</option>
+          <% ['Low', 'Medium', 'High'].forEach(level => { %>
+            <option value="<%= level %>" <%= field('lightRequirement') === level ? 'selected' : '' %>><%= level %></option>
+          <% }); %>
+        </select>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="growthRate" class="form-label">Growth Rate</label>
+        <select class="form-select" id="growthRate" name="growthRate">
+          <option value="">Not specified</option>
+          <% ['Slow', 'Moderate', 'Fast'].forEach(rate => { %>
+            <option value="<%= rate %>" <%= field('growthRate') === rate ? 'selected' : '' %>><%= rate %></option>
+          <% }); %>
+        </select>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="maxHeight" class="form-label">Maximum Height</label>
+        <input type="text" class="form-control" id="maxHeight" name="maxHeight" value="<%= field('maxHeight') %>" placeholder="e.g. 30 cm">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="careLevelPlant" class="form-label">Care Level</label>
+        <select class="form-select" id="careLevelPlant" name="careLevel">
+          <option value="">Not specified</option>
+          <% ['Beginner', 'Intermediate', 'Advanced'].forEach(level => { %>
+            <option value="<%= level %>" <%= field('careLevel') === level ? 'selected' : '' %>><%= level %></option>
+          <% }); %>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div data-spec-group="Equipment Maintenance" class="product-spec-group d-none">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="productSize" class="form-label">Size / Capacity</label>
+        <input type="text" class="form-control" id="productSize" name="productSize" value="<%= field('productSize') %>" placeholder="e.g. 32.5 gal or 60 cm">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="productDetails" class="form-label">Specification</label>
+        <input type="text" class="form-control" id="productDetails" name="productDetails" value="<%= field('details') || (product && product.productDetails) || '' %>" placeholder="e.g. Full-spectrum LED, freshwater test kit">
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,97 @@
+<nav class="navbar navbar-expand-xl bg-white shadow-sm sticky-top portfolio-navbar" id="mainNavbar">
+    <div class="container navbar-shell">
+        <a class="navbar-brand" href="/" aria-label="Moss and Marine home">
+            <img src="/images/logo.png" alt="Moss and Marine" class="oversized-logo">
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-content w-100">
+                <form class="nav-search" method="GET" action="/inventory" role="search">
+                    <svg class="nav-search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <path d="m20 20-3.6-3.6"></path>
+                    </svg>
+                    <input
+                        class="nav-search-input"
+                        type="search"
+                        name="q"
+                        value="<%= locals.navSearch || '' %>"
+                        placeholder="Search the shop..."
+                        aria-label="Search products"
+                    >
+                    <button class="nav-search-button" type="submit" aria-label="Search products">
+                        <span class="d-none d-xl-inline">Search</span>
+                        <svg class="nav-search-button-icon d-xl-none" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <circle cx="11" cy="11" r="7"></circle>
+                            <path d="m20 20-3.6-3.6"></path>
+                        </svg>
+                    </button>
+                </form>
+
+                <ul class="navbar-nav ms-xl-auto align-items-xl-center nav-actions">
+                    <li class="nav-item"><a class="nav-link <%= currentPath === '/' ? 'active' : '' %>" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link <%= currentPath === '/inventory' ? 'active' : '' %>" href="/inventory">Shop</a></li>
+
+                    <% if (locals.user) { %>
+                        <li class="nav-item"><a class="nav-link <%= currentPath.startsWith('/orders') ? 'active' : '' %>" href="/orders">Orders</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link cart-nav-link <%= currentPath === '/cart' ? 'active' : '' %>" href="/cart" aria-label="View cart">
+                                <svg class="cart-nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M3 4h2l2.2 10.1a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 8H7.1M10 20a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/>
+                                </svg>
+                                <span>Cart</span>
+                            </a>
+                        </li>
+
+                        <% if (user.role === 'data-entry-clerk') { %>
+                            <li class="nav-item dropdown staff-menu">
+                                <a
+                                    class="nav-link dropdown-toggle <%= (currentPath.startsWith('/inventory/list') || currentPath.startsWith('/inventory/add') || currentPath.startsWith('/inventory/edit') || currentPath.startsWith('/inventory/remove')) ? 'active' : '' %>"
+                                    href="#"
+                                    id="staffMenu"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    Data Clerk
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="staffMenu">
+                                    <li><a class="dropdown-item" href="/inventory/list">Manage Products</a></li>
+                                    <li><a class="dropdown-item" href="/inventory/add">Add Product</a></li>
+                                </ul>
+                            </li>
+                        <% } %>
+
+                        <li class="nav-item dropdown account-menu">
+                            <a
+                                class="nav-link dropdown-toggle user-name"
+                                href="#"
+                                id="accountMenu"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                <%= user.firstName %>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountMenu">
+                                <% if (user.role === 'data-entry-clerk') { %>
+                                    <li><span class="dropdown-item-text account-role-label">Signed in as Data Clerk</span></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                <% } %>
+                                <li><a class="dropdown-item" href="/orders">Order History</a></li>
+                                <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+                            </ul>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item"><a class="nav-link <%= currentPath === '/log-in' ? 'active' : '' %>" href="/log-in">Log In</a></li>
+                        <li class="nav-item"><a class="nav-link auth-link <%= currentPath === '/sign-up' ? 'active' : '' %>" href="/sign-up">Create Account</a></li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>

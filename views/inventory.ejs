@@ -1,0 +1,160 @@
+<%
+const categoryCopy = {
+    'Aquatic Life': 'Healthy freshwater and marine livestock, organized so similar species stay together.',
+    'Plants': 'Aquatic plants for planted tanks, aquascapes, and natural cover.',
+    'Equipment': 'Tanks, lighting, filtration, and the hardware that keeps an aquarium running.',
+    'Maintenance': 'Water care, testing, food, and everyday aquarium upkeep.'
+};
+const heading = searchTerm
+    ? `Results for “${searchTerm}”`
+    : (currentCategory || (showLiveStock ? 'Live Stock' : 'All Products'));
+const subheading = searchTerm
+    ? `${products.length} product${products.length === 1 ? '' : 's'} found`
+    : (currentCategory ? categoryCopy[currentCategory] : 'Browse the complete Moss & Marine collection.');
+%>
+
+<div class="container shop-page py-4 py-lg-5">
+    <nav class="site-breadcrumb" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-pill breadcrumb-home" aria-label="Home">⌂</a>
+        <span class="breadcrumb-separator">›</span>
+        <a href="/inventory" class="breadcrumb-pill <%= !currentCategory && !searchTerm ? 'active' : '' %>">Shop</a>
+        <% if (currentCategory) { %>
+            <span class="breadcrumb-separator">›</span>
+            <span class="breadcrumb-pill active"><%= currentCategory %></span>
+        <% } %>
+    </nav>
+
+    <section class="shop-heading-block">
+        <div>
+            <p class="section-kicker mb-2"><%= searchTerm ? 'Search results' : 'Moss & Marine shop' %></p>
+            <h1 class="shop-page-title"><%= heading %></h1>
+            <p class="shop-page-copy"><%= subheading %></p>
+        </div>
+    </section>
+
+    <% if (!searchTerm || products.length > 0) { %>
+        <form class="shop-controls" method="GET" action="/inventory">
+            <% if (!currentCategory) { %>
+            <div class="shop-sort-group">
+                <label for="shop-category">Category</label>
+                <select class="form-select form-select-sm" id="shop-category" name="category" onchange="this.form.submit()">
+                    <option value="">All products</option>
+                    <% ['Aquatic Life', 'Plants', 'Equipment', 'Maintenance'].forEach(cat => { %>
+                    <option value="<%= cat %>"><%= cat %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <% } else { %>
+                <input type="hidden" name="category" value="<%= currentCategory %>">
+            <% } %>
+            <% if (searchTerm) { %><input type="hidden" name="q" value="<%= searchTerm %>"><% } %>
+            <% if (familyFilter) { %><input type="hidden" name="family" value="<%= familyFilter %>"><% } %>
+            <% if (subfamilyFilter) { %><input type="hidden" name="subfamily" value="<%= subfamilyFilter %>"><% } %>
+
+            <div class="shop-sort-group">
+                <label for="sort">Sort</label>
+                <select class="form-select form-select-sm" id="sort" name="sort" onchange="this.form.submit()">
+                    <option value="featured" <%= sort === 'featured' ? 'selected' : '' %>>Default (Featured)</option>
+                    <option value="az" <%= sort === 'az' ? 'selected' : '' %>>A–Z</option>
+                    <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Newest</option>
+                    <option value="price-low" <%= sort === 'price-low' ? 'selected' : '' %>>Price: Low to High</option>
+                    <option value="price-high" <%= sort === 'price-high' ? 'selected' : '' %>>Price: High to Low</option>
+                </select>
+                <% if (sort !== 'featured') { %>
+                  <button type="button" onclick="this.form.elements.sort.value='featured';this.form.submit()" class="shop-reset-sort">Reset sort</button>
+                <% } %>
+            </div>
+
+            <label class="filter-chip <%= inStockOnly ? 'active' : '' %>">
+                <input type="checkbox" name="inStock" value="1" <%= inStockOnly ? 'checked' : '' %> onchange="this.form.submit()">
+                <span>In Stock</span>
+            </label>
+            <label class="filter-chip <%= onSaleOnly ? 'active' : '' %>">
+                <input type="checkbox" name="onSale" value="1" <%= onSaleOnly ? 'checked' : '' %> onchange="this.form.submit()">
+                <span>On Sale</span>
+            </label>
+        </form>
+    <% } %>
+
+    <% if (currentCategory) { %>
+        <nav class="shop-category-switcher" aria-label="Browse other categories">
+            <span>Browse:</span>
+            <a class="family-chip" href="/inventory">All Products</a>
+            <% ['Aquatic Life', 'Plants', 'Equipment', 'Maintenance'].forEach(cat => { %>
+                <a class="family-chip <%= currentCategory === cat ? 'active' : '' %>" <%= currentCategory === cat ? 'aria-current="page"' : '' %> href="/inventory?category=<%= encodeURIComponent(cat) %>"><%= cat %></a>
+            <% }); %>
+        </nav>
+    <% } %>
+
+    <% if (currentCategory === 'Aquatic Life' && Object.keys(liveFishGroups).length > 1) { %>
+        <div class="family-filter" aria-label="Live fish groups">
+            <a class="family-chip <%= !familyFilter ? 'active' : '' %>" href="/inventory?category=Aquatic%20Life&sort=<%= encodeURIComponent(sort) %><%= inStockOnly ? '&inStock=1' : '' %><%= onSaleOnly ? '&onSale=1' : '' %>">All</a>
+            <% Object.keys(liveFishGroups).forEach(family => { %>
+                <a class="family-chip <%= familyFilter === family ? 'active' : '' %>" href="/inventory?category=Aquatic%20Life&family=<%= encodeURIComponent(family) %>&sort=<%= encodeURIComponent(sort) %><%= inStockOnly ? '&inStock=1' : '' %><%= onSaleOnly ? '&onSale=1' : '' %>"><%= family %></a>
+            <% }); %>
+        </div>
+    <% } %>
+
+    <% if (searchTerm && products.length === 0) { %>
+        <div class="search-empty-state text-center">
+            <h2>No products found</h2>
+            <p class="text-muted">Try a different product name, category, or keyword.</p>
+            <a class="btn btn-primary" href="/inventory">Browse all products</a>
+        </div>
+    <% } %>
+
+    <div class="category-sections">
+        <% if (currentCategory === 'Aquatic Life') { %>
+            <% for (const [family, familyProducts] of Object.entries(visibleLiveFishGroups)) { %>
+                <section class="product-family-section">
+                    <div class="product-family-heading">
+                        <div>
+                            <p class="product-family-kicker">Aquatic Life</p>
+                            <h2><%= family %></h2>
+                        </div>
+                        <span><%= familyProducts.length %> item<%= familyProducts.length === 1 ? '' : 's' %></span>
+                    </div>
+                    <% if (subfamilies[family] && subfamilies[family].length) { %>
+                      <div class="family-filter" aria-label="<%= family %> subgroups">
+                        <a class="family-chip <%= !subfamilyFilter ? 'active' : '' %>" href="/inventory?category=Aquatic%20Life&family=<%= encodeURIComponent(family) %>">All <%= family %></a>
+                        <% subfamilies[family].forEach(sub => { %>
+                          <a class="family-chip <%= subfamilyFilter.toLowerCase() === sub.toLowerCase() ? 'active' : '' %>" href="/inventory?category=Aquatic%20Life&family=<%= encodeURIComponent(family) %>&subfamily=<%= encodeURIComponent(sub) %>"><%= sub %></a>
+                        <% }); %>
+                      </div>
+                    <% } %>
+                    <div class="product-grid">
+                        <% familyProducts.forEach(product => { %>
+                            <%- include('./partials/product', { product }) %>
+                        <% }); %>
+                    </div>
+                </section>
+            <% } %>
+        <% } else if (!currentCategory) { %>
+            <% if (products.length) { %>
+              <section class="product-family-section">
+                <div class="product-family-heading"><div><p class="product-family-kicker">Entire collection</p><h2>All products</h2></div><span><%= products.length %> items</span></div>
+                <div class="product-grid">
+                  <% products.forEach(product => { %><%- include('./partials/product', { product }) %><% }); %>
+                </div>
+              </section>
+            <% } %>
+        <% } else { %>
+            <% for (const [category, categoryProducts] of Object.entries(productsByCategory)) { %>
+                <section class="product-family-section">
+                    <div class="product-family-heading">
+                        <div>
+                            <p class="product-family-kicker">Category</p>
+                            <h2><%= category %></h2>
+                        </div>
+                        <span><%= categoryProducts.length %> item<%= categoryProducts.length === 1 ? '' : 's' %></span>
+                    </div>
+                    <div class="product-grid">
+                        <% categoryProducts.forEach(product => { %>
+                            <%- include('./partials/product', { product }) %>
+                        <% }); %>
+                    </div>
+                </section>
+            <% } %>
+        <% } %>
+    </div>
+</div>

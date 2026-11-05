@@ -1,0 +1,41 @@
+<% const previous = Array.isArray(product.variants) ? product.variants : []; %>
+<% const isEnabled = (label) => product[`variant${label}Enabled`] === 'on' || (product[`variant${label}Enabled`] === undefined && previous.some(v => String(v.label).toLowerCase() === label.toLowerCase() && (label !== 'Adult' || !previous.some(v2 => String(v2.label).toLowerCase() === 'juvenile')))); %>
+<% const existing = (label) => previous.find(v => String(v.label).toLowerCase() === label.toLowerCase()) || {}; %>
+<section class="mb-4" id="livestock-variants" hidden aria-labelledby="variants-heading">
+  <h4 id="variants-heading">Livestock variants <span class="text-muted fw-normal fs-6">(optional)</span></h4>
+  <p class="text-muted small">Your regular product price, sale price and stock represent the Adult by default. Select Juvenile to offer a second age at its own price and stock. Select Adult only if you want to override those default Adult values. Each age has its own SKU.</p>
+  <% for (const label of ['Adult','Juvenile']) { const item = existing(label); const enabled = isEnabled(label); %>
+    <div class="variant-editor mb-3" data-variant="<%= label %>">
+      <label class="form-check-label d-flex gap-2 align-items-center mb-2">
+        <input class="form-check-input mt-0" type="checkbox" name="variant<%= label %>Enabled" <%= enabled ? 'checked' : '' %>>
+        <strong><%= label %><%= label === "Adult" ? " (custom price/stock override)" : "" %></strong>
+      </label>
+      <div class="row g-2 variant-editor-fields">
+        <div class="col-sm-4"><label class="form-label" for="variant<%= label %>Price">Price ($)</label><input class="form-control" type="number" step="0.01" min="0.01" id="variant<%= label %>Price" name="variant<%= label %>Price" value="<%= product[`variant${label}Price`] ?? item.price ?? '' %>"></div>
+        <div class="col-sm-4"><label class="form-label" for="variant<%= label %>Stock">Stock</label><input class="form-control" type="number" step="1" min="0" id="variant<%= label %>Stock" name="variant<%= label %>Stock" value="<%= product[`variant${label}Stock`] ?? item.stockQuantity ?? '' %>"></div>
+        <div class="col-sm-4"><label class="form-label" for="variant<%= label %>Sale">Sale price ($) (optional)</label><input class="form-control" type="number" step="0.01" min="0.01" id="variant<%= label %>Sale" name="variant<%= label %>Sale" value="<%= product[`variant${label}Sale`] ?? item.salePrice ?? '' %>"></div>
+      </div>
+      <% if (item.sku) { %><p class="small text-muted mb-0 mt-2">SKU: <code><%= item.sku %></code></p><% } %>
+    </div>
+  <% } %>
+</section>
+<script>
+(() => {
+  const section = document.getElementById('livestock-variants');
+  if (!section) return;
+  const refresh = () => {
+    const isAquatic = !!document.querySelector('input[name="category"][value="Aquatic Life"]:checked');
+    section.hidden = !isAquatic;
+    section.querySelectorAll('.variant-editor').forEach(editor => {
+      const checked = editor.querySelector('input[type="checkbox"]');
+      checked.disabled = !isAquatic;
+      editor.querySelectorAll('.variant-editor-fields input').forEach(field => {
+        field.disabled = !isAquatic || !checked.checked;
+        field.required = isAquatic && checked.checked && !field.name.endsWith('Sale');
+      });
+    });
+  };
+  document.querySelectorAll('input[name="category"], #livestock-variants input[type="checkbox"]').forEach(el => el.addEventListener('change', refresh));
+  refresh();
+})();
+</script>

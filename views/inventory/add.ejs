@@ -1,0 +1,109 @@
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Add New Product</h1>
+            <p class="lead">Create a new product to add to the inventory.</p>
+        </div>
+    </div>
+    
+    <% if (errors && errors.length > 0) { %>
+        <div class="site-alert site-alert-error mb-4">
+            <ul class="mb-0">
+                <% errors.forEach(error => { %>
+                    <li><%= error %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" action="/inventory/add" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <h4>Basic Information</h4>
+                            <hr>
+                            
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="title" name="title" value="<%= product.title || '' %>" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description (optional)</label>
+                                <textarea class="form-control" id="description" name="description" rows="3"><%= product.description || '' %></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">SKU</label>
+                                <div class="form-control bg-light text-muted">Generated automatically when the product is created</div>
+                                <small class="text-muted">SKUs are system-managed so staff cannot accidentally create duplicates.</small>
+                            </div>
+                            <%- include('../partials/category-selector.ejs', { product: product }) %>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4>Pricing</h4>
+                            <hr>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="price" class="form-label">Regular Price</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="price" name="price" step="0.01" min="0.01" value="<%= product.price || '' %>" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="salePrice" class="form-label">Sale Price (optional)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="salePrice" name="salePrice" step="0.01" min="0.01" value="<%= product.salePrice || '' %>">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="stockQuantity" class="form-label">Stock Quantity</label>
+                                <input type="number" class="form-control" id="stockQuantity" name="stockQuantity" min="0" step="1" value="<%= product.stockQuantity ?? 0 %>" required>
+                                <small class="text-muted">Set this to 0 to keep the product listed as Sold Out.</small>
+                            </div>
+                        </div>
+                        
+                        <%- include('../partials/livestock-variants.ejs', { product }) %>
+                        <%- include('../partials/product-spec-fields.ejs', { product: product }) %>
+
+                        <div class="mb-4">
+                            <h4>Product Image</h4>
+                            <hr>
+                            
+                            <div class="mb-3">
+                                <label for="productImage" class="form-label">Upload Image</label>
+                                <input type="file" class="form-control" id="productImage" name="productImage" accept=".jpg,.jpeg,.png,.gif,.webp" required>
+                                <small class="text-muted">Accepted formats: JPG, JPEG, PNG, GIF, WEBP</small>
+                            </div>
+                        </div>
+            
+                        <div class="mb-4">
+                            <h4>Product Status</h4>
+                            <hr>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="featured" name="featured" <%= product.featured ? 'checked' : '' %>>
+                                <label class="form-check-label" for="featured">
+                                    Featured Product (will appear on home page)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end">
+                            <a href="/inventory/list" class="btn btn-secondary me-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Add Product</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

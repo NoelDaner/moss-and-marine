@@ -1,0 +1,71 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h1 class="text-center mb-2">Create Account</h1>
+                    <p class="text-center text-muted mb-4">Join Moss and Marine to access exclusive offers and manage your orders</p>
+                    
+                    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+                        <div class="alert alert-danger mb-4">
+                            <ul class="mb-0">
+                                <% errors.forEach(error => { %>
+                                    <li><%= error %></li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    <% } %>
+                    
+                    <form method="POST" action="/sign-up" novalidate>
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label">First Name</label>
+
+                            <input type="text" class="form-control <%= typeof firstNameError !== 'undefined' && firstNameError ? 'is-invalid' : '' %>" 
+                                id="firstName" name="firstName" value="<%= typeof firstName !== 'undefined' ? firstName : '' %>">
+                            <% if (typeof firstNameError !== 'undefined' && firstNameError) { %>
+                                <div class="invalid-feedback"><%= firstNameError %></div>
+                            <% } %>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control <%= typeof lastNameError !== 'undefined' && lastNameError ? 'is-invalid' : '' %>" 
+                                id="lastName" name="lastName" value="<%= typeof lastName !== 'undefined' ? lastName : '' %>">
+                            <% if (typeof lastNameError !== 'undefined' && lastNameError) { %>
+                                <div class="invalid-feedback"><%= lastNameError %></div>
+                            <% } %>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+
+                            <input type="text" class="form-control <%= typeof emailError !== 'undefined' && emailError ? 'is-invalid' : '' %>" 
+                                id="email" name="email" value="<%= typeof email !== 'undefined' ? email : '' %>">
+                            <% if (typeof emailError !== 'undefined' && emailError) { %>
+                                <div class="invalid-feedback"><%= emailError %></div>
+                            <% } %>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control <%= typeof passwordError !== 'undefined' && passwordError ? 'is-invalid' : '' %>" 
+                                id="password" name="password">
+                            <% if (typeof passwordError !== 'undefined' && passwordError) { %>
+                                <div class="invalid-feedback"><%= passwordError %></div>
+                            <% } %>
+                            <small class="form-text text-muted">Password must be 8-12 characters with at least one lowercase letter, uppercase letter, number, and symbol.</small>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary py-2">Create Account</button>
+                        </div>
+                    </form>
+                    
+                    <p class="text-center mt-4 mb-0">
+                        Already have an account? <a href="/log-in" class="text-decoration-none">Log In</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

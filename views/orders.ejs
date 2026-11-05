@@ -1,0 +1,55 @@
+<div class="container orders-page py-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+        <div>
+            <p class="inventory-eyebrow mb-2">Your account</p>
+            <h1 class="mb-1">Order History</h1>
+            <p class="text-muted mb-0">A record of the orders you have placed with Moss &amp; Marine.</p>
+        </div>
+        <a href="/inventory" class="btn btn-outline-primary">Continue Shopping</a>
+    </div>
+
+    <% if (!orders || orders.length === 0) { %>
+        <div class="card border-0 shadow-sm order-empty-state">
+            <div class="card-body text-center p-5">
+                <div class="order-empty-icon mb-3">🧾</div>
+                <h2 class="h4">No orders yet</h2>
+                <p class="text-muted mb-4">Once you place an order, its summary will appear here.</p>
+                <a href="/inventory" class="btn btn-primary">Browse Products</a>
+            </div>
+        </div>
+    <% } else { %>
+        <div class="order-history-list">
+            <% orders.forEach(order => { %>
+                <article class="card border-0 shadow-sm order-history-card mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
+                            <div>
+                                <div class="small text-muted">Order</div>
+                                <h2 class="h5 mb-1"><%= order.orderNumber %></h2>
+                                <div class="small text-muted"><%= new Date(order.createdAt).toLocaleString('en-CA', { dateStyle: 'medium', timeStyle: 'short' }) %></div>
+                            </div>
+                            <div class="text-md-end">
+                                <span class="order-status"><%= order.status %></span>
+                                <div class="mt-2"><strong><%= order.totalQuantity %></strong> item<%= order.totalQuantity === 1 ? '' : 's' %> · <strong>$<%= order.total.toFixed(2) %></strong></div>
+                            </div>
+                        </div>
+
+                        <div class="order-history-items">
+                            <% order.items.forEach(item => { %>
+                                <div class="order-history-item">
+                                    <img src="<%= item.imageUrl %>" alt="<%= item.title %>" class="order-history-image">
+                                    <div class="flex-grow-1">
+                                        <div class="small text-primary fw-semibold text-uppercase"><%= item.category %></div>
+                                        <div class="fw-semibold"><%= item.title %></div>
+                                        <div class="small text-muted">$<%= item.unitPrice.toFixed(2) %> × <%= item.quantity %></div>
+                                    </div>
+                                    <div class="fw-semibold">$<%= item.lineTotal.toFixed(2) %></div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    </div>
+                </article>
+            <% }); %>
+        </div>
+    <% } %>
+</div>
