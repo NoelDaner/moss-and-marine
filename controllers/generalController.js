@@ -89,6 +89,12 @@ exports.processSignUp = async (req, res) => {
     } catch (emailError) {
       console.error('Welcome email failed:', emailError.message);
     }
+
+    try {
+      await emailUtil.sendNewSignupNotification(newUser);
+    } catch (emailError) {
+      console.error('Admin signup notification failed:', emailError.message);
+    }
     
     req.session.user = {
       id: newUser._id,
@@ -423,6 +429,12 @@ exports.checkout = async (req, res) => {
       await emailUtil.sendOrderConfirmationEmail(createdOrder);
     } catch (emailError) {
       console.error('Order confirmation email failed:', emailError.message);
+    }
+
+    try {
+      await emailUtil.sendNewOrderNotification(createdOrder);
+    } catch (emailError) {
+      console.error('Admin order notification failed:', emailError.message);
     }
 
     return res.redirect(`/orders/${createdOrder._id}/confirmation`);

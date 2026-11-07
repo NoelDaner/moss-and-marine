@@ -88,4 +88,74 @@ async function sendOrderConfirmationEmail(order) {
   });
 }
 
-module.exports = { sendWelcomeEmail, sendOrderConfirmationEmail };
+
+
+
+
+
+/**
+ * Optional admin notifications for monitoring demo-site activity.
+ * Disabled automatically when ADMIN_NOTIFICATION_EMAIL is not configured.
+ */
+
+function getAdminNotificationEmail() {
+  const address = (process.env.ADMIN_NOTIFICATION_EMAIL || '').trim();
+  if (!address) return null;
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) {
+    throw new Error('ADMIN_NOTIFICATION_EMAIL is not a valid email address.');
+  }
+
+  return address;
+}
+
+async function sendAdminNotification(subject, text) {
+  const recipient = getAdminNotificationEmail();
+  if (!recipient) return null;
+
+  const { mg, domain, fromAddress } = getMailgunClient();
+
+  return mg.messages.create(domain, {
+    from: fromAddress,
+    to: recipient,
+    subject,
+    text
+  });
+}
+
+async function sendNewSignupNotification() {
+  const text = [
+    'A new user signed up on Moss & Marine.',
+    '',
+    `Time: ${new Date().toISOString()}`,
+    '',
+    'This is an automated portfolio-site notification.'
+  ].join('\n');
+
+  return sendAdminNotification('Moss & Marine — New signup', text);
+}
+
+async function sendNewOrderNotification(order) {
+  const text = [
+    'A new demo order was placed on Moss & Marine.',
+    '',
+    `Order: ${order.orderNumber}`,
+    `Items: ${order.totalQuantity}`,
+    `Total: $${Number(order.total).toFixed(2)} CAD`,
+    `Time: ${new Date(order.createdAt || Date.now()).toISOString()}`,
+    '',
+    'Demo only — no real payment or shipment is processed.'
+  ].join('\n');
+
+  return sendAdminNotification(
+    `Moss & Marine — New demo order ${order.orderNumber}`,
+    text
+  );
+}
+
+module.exports = {
+  sendWelcomeEmail,
+  sendOrderConfirmationEmail,
+  sendNewSignupNotification,
+  sendNewOrderNotification
+};
