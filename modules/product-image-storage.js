@@ -33,7 +33,8 @@ async function serveProductImage(req, res) {
     const files = await bucket().find({ _id: id }).limit(1).toArray();
     if (!files.length) return res.sendStatus(404);
     res.type(files[0].contentType || 'application/octet-stream');
-    res.set('Cache-Control', 'public, max-age=86400');
+    // Every upload has a new GridFS ID, so this URL is safe to cache long-term.
+    res.set('Cache-Control', 'public, max-age=604800, s-maxage=31536000, immutable');
     bucket().openDownloadStream(id).on('error', err => {
       console.error('Image streaming failed:', err);
       if (!res.headersSent) res.sendStatus(404); else res.destroy();

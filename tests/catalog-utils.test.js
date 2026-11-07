@@ -26,3 +26,21 @@ test('generated SKU has a category prefix and a unique suffix', () => {
   assert.match(first, /^FISH-AMANO-SHRIMP-[A-F0-9]{8}$/);
   assert.notEqual(first, second);
 });
+
+const { buildProductSearch, getSearchTerms } = require('../modules/product-search-util');
+
+test('search ignores generic fish when a specific term is provided', () => {
+  assert.deepEqual(getSearchTerms('  beta   fish '), ['beta']);
+  const filter = buildProductSearch('beta fish');
+  assert.equal(filter.$and.length, 1);
+  assert.equal(filter.$and[0].$or[0].title.test('Blue Betta Halfmoon'), true);
+  assert.equal(filter.$and[0].$or[0].title.test('Beta fish'), true);
+});
+
+test('multiword searches match words independently and escape regex characters', () => {
+  const filter = buildProductSearch('red cherry');
+  assert.equal(filter.$and.length, 2);
+  assert.ok(filter.$and[0].$or[0].title.test('Cherry Red Shrimp'));
+  assert.ok(filter.$and[1].$or[0].title.test('Cherry Red Shrimp'));
+  assert.equal(buildProductSearch('[shrimp]').$and[0].$or[0].title.test('[Shrimp]'), true);
+});

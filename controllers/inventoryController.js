@@ -10,6 +10,7 @@ const ALLOWED_CATEGORIES = ['Aquatic Life', 'Plants', 'Equipment', 'Maintenance'
 const ANIMAL_TYPES = ['Fish', 'Shrimp', 'Snail', 'Other'];
 
 const { saveProductImage, deleteProductImage } = require('../modules/product-image-storage');
+const { buildProductSearch } = require('../modules/product-search-util');
 
 exports.getInventoryPage = async (req, res) => {
     try {
@@ -33,16 +34,7 @@ exports.getInventoryPage = async (req, res) => {
         if (onSaleOnly) filters.push({ salePrice: { $exists: true, $ne: null } });
 
         if (searchTerm) {
-            const escapedSearch = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const searchRegex = new RegExp(escapedSearch, 'i');
-            filters.push({
-                $or: [
-                    { title: searchRegex },
-                    { description: searchRegex },
-                    { category: searchRegex },
-                    { sku: searchRegex }
-                ]
-            });
+            filters.push(buildProductSearch(searchTerm));
         }
 
         const query = filters.length > 0 ? { $and: filters } : {};
@@ -194,9 +186,7 @@ exports.getProductListPage = async (req, res) => {
           filters.push(kind === 'type' ? { animalType: type } : { animalType: type, animalFamily: new RegExp('^\\s*' + family.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ /g, '\\s+') + '\\s*$', 'i') });
       }
       if (search) {
-          const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-          const regex = new RegExp(escaped, 'i');
-          filters.push({ $or: [{ title: regex }, { sku: regex }, { category: regex }, { animalType: regex }, { animalFamily: regex }] });
+          filters.push(buildProductSearch(search));
       }
 
       const query = filters.length ? { $and: filters } : {};

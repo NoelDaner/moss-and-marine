@@ -65,3 +65,14 @@ This project is a **portfolio demo**, not a production commerce system. No real 
 ## License
 
 The package metadata currently uses ISC, a permissive license. Confirm whether you want to publish under that license before making the repository public.
+
+### Search and product-image performance
+
+Search splits a query into meaningful words (case-insensitive); for example,
+`beta fish` also finds products titled `Betta ...`. Category filters remain applied.
+Product photos are stored in MongoDB GridFS under unique `/media/products/:id`
+URLs; the image endpoint sends browser/CDN cache headers so repeat visits avoid
+re-fetching an unchanged image. The first request for an uncached photo still
+streams from MongoDB. For best first-load speed, upload compressed WebP/JPEG
+photos sized for the storefront (typically 800–1200 px wide), rather than
+multi-megabyte originals. Don't re-use the same image ID for changed content.

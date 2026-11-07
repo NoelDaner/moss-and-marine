@@ -9,7 +9,7 @@
     <% } %>
 
     <a href="/inventory/product/<%= product._id %>" class="product-image-link <%= (product.animalType === 'Shrimp') ? 'product-image-shrimp' : '' %>" aria-label="View <%= product.title %>">
-        <img src="<%= product.imageUrl %>" class="card-img-top" alt="<%= product.title %>" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false;">
+        <img src="<%= product.imageUrl %>" class="card-img-top" alt="<%= product.title %>" loading="lazy" decoding="async" onerror="this.hidden=true;this.nextElementSibling.hidden=false;">
         <span class="product-image-unavailable" hidden aria-label="Product image unavailable"><span>Image coming soon</span></span>
     </a>
 
